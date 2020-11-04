@@ -15,4 +15,9 @@ public class GlobalExceptionHandler {
         final String message = Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage();
         return ResponseEntity.badRequest().body(new CustomError(400, message));
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<CustomError> illegalArgumentHandler(IllegalArgumentException e) {
+        return ResponseEntity.badRequest().body(new CustomError(400, e.getMessage()));
+    }
 }

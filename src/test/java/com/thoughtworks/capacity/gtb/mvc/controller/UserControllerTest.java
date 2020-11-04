@@ -112,11 +112,22 @@ class UserControllerTest {
     public void should_reject_registering_given_username_with_unacceptable_characters() throws Exception {
         final User invalidUsernameUser = User.builder().username("123-@无效").password("abc123").build();
 
-        final String shortUsernameJson = objectMapper.writeValueAsString(invalidUsernameUser);
+        final String invalidUsernameJson = objectMapper.writeValueAsString(invalidUsernameUser);
 
-        mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(shortUsernameJson))
+        mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(invalidUsernameJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Username could only be composed by letters, numbers and underscores."));
+    }
+
+    @Test
+    public void should_reject_registering_given_existing_username() throws Exception {
+        final User existingUsernameUser = User.builder().username("default").password("abc123").build();
+
+        final String existingUsernameJson = objectMapper.writeValueAsString(existingUsernameUser);
+
+        mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(existingUsernameJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Username already exists."));
     }
 
 }

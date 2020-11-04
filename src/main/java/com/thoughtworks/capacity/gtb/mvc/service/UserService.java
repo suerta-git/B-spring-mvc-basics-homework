@@ -16,6 +16,9 @@ public class UserService {
     }
 
     public void addUser(User user) {
+        if (users.containsKey(user.getUsername())) {
+            throw new IllegalArgumentException("Username already exists.");
+        }
         users.put(user.getUsername(), user);
     }
 
