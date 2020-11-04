@@ -130,4 +130,27 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.message").value("Username already exists."));
     }
 
+    @Test
+    public void should_reject_registering_given_null_empty_or_blank_password() throws Exception {
+        final User nullPasswordUser = User.builder().username("new").build();
+        final User emptyPasswordUser = User.builder().username("new").password("").build();
+        final User blankPasswordUser = User.builder().username("new").password("      ").build();
+
+        final String nullPasswordJson = objectMapper.writeValueAsString(nullPasswordUser);
+        final String emptyPasswordJson = objectMapper.writeValueAsString(emptyPasswordUser);
+        final String blankPasswordJson = objectMapper.writeValueAsString(blankPasswordUser);
+
+        mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(nullPasswordJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Password could not be null, empty or blank."));
+
+        mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(emptyPasswordJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Password could not be null, empty or blank."));
+
+        mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(blankPasswordJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Password could not be null, empty or blank."));
+    }
+
 }

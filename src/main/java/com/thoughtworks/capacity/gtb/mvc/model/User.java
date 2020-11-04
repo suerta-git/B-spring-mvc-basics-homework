@@ -20,7 +20,7 @@ public class User {
     @Pattern(regexp = "^[A-Za-z0-9_]+$", message = "Username could only be composed by letters, numbers and underscores.")
     private String username;
 
-    @NotBlank(message = "Password could not be empty.", groups = First.class)
+    @NotBlank(message = "Password could not be null, empty or blank.", groups = First.class)
     @Length(min = 5, max = 12, message = "Password length must >= 5 and <= 12.")
     private String password;
 
