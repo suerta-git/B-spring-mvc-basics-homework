@@ -15,6 +15,7 @@ import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -44,7 +45,7 @@ class UserControllerTest {
     public void should_register_user_given_all_fields() throws Exception {
         final User newUser = User.builder()
                 .username("new")
-                .password("abc")
+                .password("abc123")
                 .email("abc@xyz.com").build();
         final String json = objectMapper.writeValueAsString(newUser);
 
@@ -58,13 +59,36 @@ class UserControllerTest {
     public void should_register_user_given_user_without_email() throws Exception {
         final User newUser = User.builder()
                 .username("new")
-                .password("abc").build();
+                .password("abc123").build();
         final String json = objectMapper.writeValueAsString(newUser);
 
         mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(json))
                 .andExpect(status().isCreated());
 
         assertEquals(newUser, userService.findByName(newUser.getUsername()));
+    }
+
+    @Test
+    public void should_reject_registering_given_null_empty_or_blank_username() throws Exception {
+        final User nullUsernameUser = User.builder().password("abc123").build();
+        final User emptyUsernameUser = User.builder().username("").password("abc123").build();
+        final User blankUsernameUser = User.builder().username("      ").password("abc123").build();
+
+        final String nullUsernameJson = objectMapper.writeValueAsString(nullUsernameUser);
+        final String emptyUsernameJson = objectMapper.writeValueAsString(emptyUsernameUser);
+        final String blankUsernameJson = objectMapper.writeValueAsString(blankUsernameUser);
+
+        mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(nullUsernameJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Username could not be null, empty or blank."));
+
+        mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(emptyUsernameJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Username could not be null, empty or blank."));
+
+        mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(blankUsernameJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Username could not be null, empty or blank."));
     }
 
 }
