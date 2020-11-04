@@ -91,4 +91,21 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.message").value("Username could not be null, empty or blank."));
     }
 
+    @Test
+    public void should_reject_registering_given_username_too_short_or_long() throws Exception {
+        final User shortUsernameUser = User.builder().username("12").password("abc123").build();
+        final User longUsernameUser = User.builder().username("1234567890abc").password("abc123").build();
+
+        final String shortUsernameJson = objectMapper.writeValueAsString(shortUsernameUser);
+        final String longUsernameJson = objectMapper.writeValueAsString(longUsernameUser);
+
+        mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(shortUsernameJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Username length must >= 3 and <= 10."));
+
+        mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(longUsernameJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Username length must >= 3 and <= 10."));
+    }
+
 }
