@@ -10,6 +10,7 @@ import java.util.Map;
 @Service
 public class UserService {
     private final Map<String, User> users = new HashMap<>();
+    private int nextId = 1;
 
     public User findByName(String username) {
         return users.get(username);
@@ -19,6 +20,7 @@ public class UserService {
         if (users.containsKey(user.getUsername())) {
             throw new IllegalArgumentException("Username already exists.");
         }
+        user.setId(nextId++);
         users.put(user.getUsername(), user);
     }
 

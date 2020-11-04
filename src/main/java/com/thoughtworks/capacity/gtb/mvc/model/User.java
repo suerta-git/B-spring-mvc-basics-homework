@@ -15,6 +15,8 @@ import javax.validation.constraints.Pattern;
 @EqualsAndHashCode
 @GroupSequence({First.class, User.class})
 public class User {
+    private Integer id;
+
     @NotBlank(message = "Username could not be null, empty or blank.", groups = First.class)
     @Length(min = 3, max = 10, message = "Username length must >= 3 and <= 10.")
     @Pattern(regexp = "^[A-Za-z0-9_]+$", message = "Username could only be composed by letters, numbers and underscores.")

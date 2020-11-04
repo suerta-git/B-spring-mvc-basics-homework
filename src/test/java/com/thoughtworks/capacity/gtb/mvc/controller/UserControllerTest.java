@@ -52,7 +52,9 @@ class UserControllerTest {
         mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(json))
                 .andExpect(status().isCreated());
 
-        assertEquals(newUser, userService.findByName(newUser.getUsername()));
+        assertEquals(newUser.getUsername(), userService.findByName(newUser.getUsername()).getUsername());
+        assertEquals(newUser.getPassword(), userService.findByName(newUser.getUsername()).getPassword());
+        assertEquals(newUser.getEmail(), userService.findByName(newUser.getUsername()).getEmail());
     }
 
     @Test
@@ -65,7 +67,9 @@ class UserControllerTest {
         mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(json))
                 .andExpect(status().isCreated());
 
-        assertEquals(newUser, userService.findByName(newUser.getUsername()));
+        assertEquals(newUser.getUsername(), userService.findByName(newUser.getUsername()).getUsername());
+        assertEquals(newUser.getPassword(), userService.findByName(newUser.getUsername()).getPassword());
+        assertEquals(newUser.getEmail(), userService.findByName(newUser.getUsername()).getEmail());
     }
 
     @Test
