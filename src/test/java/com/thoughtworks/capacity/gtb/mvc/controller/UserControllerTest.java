@@ -153,4 +153,20 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.message").value("Password could not be null, empty or blank."));
     }
 
+    @Test
+    public void should_reject_registering_given_password_too_short_or_long() throws Exception {
+        final User shortPasswordUser = User.builder().username("new1").password("123").build();
+        final User longPasswordUser = User.builder().username("new2").password("1234567890abc--").build();
+
+        final String shortPasswordJson = objectMapper.writeValueAsString(shortPasswordUser);
+        final String longPasswordJson = objectMapper.writeValueAsString(longPasswordUser);
+
+        mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(shortPasswordJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Password length must >= 5 and <= 12."));
+
+        mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(longPasswordJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Password length must >= 5 and <= 12."));
+    }
 }
