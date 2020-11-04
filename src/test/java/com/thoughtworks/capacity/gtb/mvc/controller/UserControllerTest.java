@@ -169,4 +169,15 @@ class UserControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Password length must >= 5 and <= 12."));
     }
+
+    @Test
+    public void should_reject_registering_given_invalid_email() throws Exception {
+        final User invalidEmailUser = User.builder().username("new1").password("123456").email("invalid_email").build();
+
+        final String invalidEmailJson = objectMapper.writeValueAsString(invalidEmailUser);
+
+        mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(invalidEmailJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Email address must conform to the email format."));
+    }
 }
