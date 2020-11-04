@@ -108,4 +108,15 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.message").value("Username length must >= 3 and <= 10."));
     }
 
+    @Test
+    public void should_reject_registering_given_username_with_unacceptable_characters() throws Exception {
+        final User invalidUsernameUser = User.builder().username("123-@无效").password("abc123").build();
+
+        final String shortUsernameJson = objectMapper.writeValueAsString(invalidUsernameUser);
+
+        mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(shortUsernameJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Username could only be composed by letters, numbers and underscores."));
+    }
+
 }
