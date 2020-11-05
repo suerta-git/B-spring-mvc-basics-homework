@@ -85,14 +85,17 @@ class UserControllerTest {
 
         mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(nullUsernameJson))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(400))
                 .andExpect(jsonPath("$.message").value("Username could not be null, empty or blank."));
 
         mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(emptyUsernameJson))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(400))
                 .andExpect(jsonPath("$.message").value("Username could not be null, empty or blank."));
 
         mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(blankUsernameJson))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(400))
                 .andExpect(jsonPath("$.message").value("Username could not be null, empty or blank."));
     }
 
@@ -106,10 +109,12 @@ class UserControllerTest {
 
         mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(shortUsernameJson))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(400))
                 .andExpect(jsonPath("$.message").value("Username length must >= 3 and <= 10."));
 
         mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(longUsernameJson))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(400))
                 .andExpect(jsonPath("$.message").value("Username length must >= 3 and <= 10."));
     }
 
@@ -121,6 +126,7 @@ class UserControllerTest {
 
         mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(invalidUsernameJson))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(400))
                 .andExpect(jsonPath("$.message").value("Username could only be composed by letters, numbers and underscores."));
     }
 
@@ -132,6 +138,7 @@ class UserControllerTest {
 
         mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(existingUsernameJson))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(400))
                 .andExpect(jsonPath("$.message").value("Username already exists."));
     }
 
@@ -147,14 +154,17 @@ class UserControllerTest {
 
         mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(nullPasswordJson))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(400))
                 .andExpect(jsonPath("$.message").value("Password could not be null, empty or blank."));
 
         mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(emptyPasswordJson))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(400))
                 .andExpect(jsonPath("$.message").value("Password could not be null, empty or blank."));
 
         mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(blankPasswordJson))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(400))
                 .andExpect(jsonPath("$.message").value("Password could not be null, empty or blank."));
     }
 
@@ -168,10 +178,12 @@ class UserControllerTest {
 
         mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(shortPasswordJson))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(400))
                 .andExpect(jsonPath("$.message").value("Password length must >= 5 and <= 12."));
 
         mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(longPasswordJson))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(400))
                 .andExpect(jsonPath("$.message").value("Password length must >= 5 and <= 12."));
     }
 
@@ -183,6 +195,7 @@ class UserControllerTest {
 
         mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(invalidEmailJson))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(400))
                 .andExpect(jsonPath("$.message").value("Email address must conform to the email format."));
     }
 
