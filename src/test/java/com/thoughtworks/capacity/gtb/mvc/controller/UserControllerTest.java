@@ -254,4 +254,14 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.code").value(400))
                 .andExpect(jsonPath("$.message").value("Password length must >= 5 and <= 12."));
     }
+
+    @Test
+    public void should_reject_when_log_in_given_incorrect_password() throws Exception {
+        mockMvc.perform(get("/login")
+                .param("username", defaultUser.getUsername())
+                .param("password", "123456"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(400))
+                .andExpect(jsonPath("$.message").value("Password not correct."));
+    }
 }

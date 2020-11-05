@@ -1,11 +1,7 @@
 package com.thoughtworks.capacity.gtb.mvc.exception;
 
-public class PasswordNotCorrectException extends RuntimeException {
+public class PasswordNotCorrectException extends CustomExceptionBase {
     public PasswordNotCorrectException() {
-        super("Password not correct.");
-    }
-
-    public PasswordNotCorrectException(String message) {
-        super(message);
+        super(400, "Password not correct.");
     }
 }

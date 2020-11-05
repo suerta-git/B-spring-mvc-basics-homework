@@ -26,13 +26,19 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<CustomError> ConstraintViolationHandler(ConstraintViolationException ex) {
+    public ResponseEntity<CustomError> ConstraintViolationHandler(ConstraintViolationException e) {
         String message = "Validation error.";
-        final Set<ConstraintViolation<?>> constraintViolations = ex.getConstraintViolations();
+        final Set<ConstraintViolation<?>> constraintViolations = e.getConstraintViolations();
         if (!Objects.isNull(constraintViolations) && !constraintViolations.isEmpty()) {
             message = constraintViolations.iterator().next().getMessage();
         }
         CustomError errorResult = new CustomError(400, message);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResult);
+    }
+
+    @ExceptionHandler(CustomExceptionBase.class)
+    public ResponseEntity<CustomError> CustomExceptionHandler(CustomExceptionBase e) {
+        final CustomError error = new CustomError(e.getStatus().value(), e.getMessage());
+        return ResponseEntity.status(e.getStatus()).body(error);
     }
 }
