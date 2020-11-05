@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -183,5 +184,17 @@ class UserControllerTest {
         mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(invalidEmailJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Email address must conform to the email format."));
+    }
+
+    @Test
+    public void should_return_user_information_when_log_in_given_correct_username_and_password() throws Exception {
+        mockMvc.perform(get("/login")
+                .param("username", defaultUser.getUsername())
+                .param("password", defaultUser.getPassword()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").isNumber())
+                .andExpect(jsonPath("$.username").value(defaultUser.getUsername()))
+                .andExpect(jsonPath("$.password").value(defaultUser.getPassword()))
+                .andExpect(jsonPath("$.email").value(defaultUser.getEmail()));
     }
 }
