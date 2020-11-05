@@ -1,11 +1,15 @@
 package com.thoughtworks.capacity.gtb.mvc.exception;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.util.Objects;
+import java.util.Set;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -19,5 +23,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<CustomError> illegalArgumentHandler(IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(new CustomError(400, e.getMessage()));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<CustomError> ConstraintViolationHandler(ConstraintViolationException ex) {
+        String message = "Validation error.";
+        final Set<ConstraintViolation<?>> constraintViolations = ex.getConstraintViolations();
+        if (!Objects.isNull(constraintViolations) && !constraintViolations.isEmpty()) {
+            message = constraintViolations.iterator().next().getMessage();
+        }
+        CustomError errorResult = new CustomError(400, message);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResult);
     }
 }
