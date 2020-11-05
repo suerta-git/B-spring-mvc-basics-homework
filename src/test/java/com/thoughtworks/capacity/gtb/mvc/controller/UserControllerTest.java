@@ -220,4 +220,21 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.code").value(400))
                 .andExpect(jsonPath("$.message").value("Username could only be composed by letters, numbers and underscores."));
     }
+
+    @Test
+    public void should_reject_when_log_in_given_username_too_short_or_long() throws Exception {
+        mockMvc.perform(get("/login")
+                .param("username", "12")
+                .param("password", defaultUser.getPassword()))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(400))
+                .andExpect(jsonPath("$.message").value("Username length must >= 3 and <= 10."));
+
+        mockMvc.perform(get("/login")
+                .param("username", "1234567890abc")
+                .param("password", defaultUser.getPassword()))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(400))
+                .andExpect(jsonPath("$.message").value("Username length must >= 3 and <= 10."));
+    }
 }

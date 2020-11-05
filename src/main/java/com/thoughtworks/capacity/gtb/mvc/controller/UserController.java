@@ -2,6 +2,7 @@ package com.thoughtworks.capacity.gtb.mvc.controller;
 
 import com.thoughtworks.capacity.gtb.mvc.model.User;
 import com.thoughtworks.capacity.gtb.mvc.service.UserService;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +29,10 @@ public class UserController {
     public User login(
             @RequestParam
             @Pattern(regexp = "^[A-Za-z0-9_]+$", message = "Username could only be composed by letters, numbers and underscores.")
+            @Length(min = 3, max = 10, message = "Username length must >= 3 and <= 10.")
                     String username,
-            @RequestParam String password) {
+            @RequestParam
+                    String password) {
         return userService.login(username, password);
     }
 }
