@@ -1,6 +1,7 @@
 package com.thoughtworks.capacity.gtb.mvc.service;
 
 import com.thoughtworks.capacity.gtb.mvc.exception.PasswordNotCorrectException;
+import com.thoughtworks.capacity.gtb.mvc.exception.UserNotExistsException;
 import com.thoughtworks.capacity.gtb.mvc.model.User;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,9 @@ public class UserService {
     }
 
     public User login(String username, String password) {
+        if (!users.containsKey(username)) {
+            throw new UserNotExistsException();
+        }
         final User user = users.get(username);
         if (!user.getPassword().equals(password)) {
             throw new PasswordNotCorrectException();

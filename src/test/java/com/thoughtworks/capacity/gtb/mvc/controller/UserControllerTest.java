@@ -256,6 +256,16 @@ class UserControllerTest {
     }
 
     @Test
+    public void should_reject_when_log_in_given_not_existing_username() throws Exception {
+        mockMvc.perform(get("/login")
+                .param("username", "not_exist")
+                .param("password", defaultUser.getPassword()))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.code").value(404))
+                .andExpect(jsonPath("$.message").value("User not exists."));
+    }
+
+    @Test
     public void should_reject_when_log_in_given_incorrect_password() throws Exception {
         mockMvc.perform(get("/login")
                 .param("username", defaultUser.getUsername())
