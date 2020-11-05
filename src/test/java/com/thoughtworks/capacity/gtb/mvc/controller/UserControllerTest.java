@@ -237,4 +237,21 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.code").value(400))
                 .andExpect(jsonPath("$.message").value("Username length must >= 3 and <= 10."));
     }
+
+    @Test
+    public void should_reject_when_log_in_given_password_too_short_or_long() throws Exception {
+        mockMvc.perform(get("/login")
+                .param("username", defaultUser.getUsername())
+                .param("password", "123"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(400))
+                .andExpect(jsonPath("$.message").value("Password length must >= 5 and <= 12."));
+
+        mockMvc.perform(get("/login")
+                .param("username", defaultUser.getUsername())
+                .param("password", "1234567890abc--"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(400))
+                .andExpect(jsonPath("$.message").value("Password length must >= 5 and <= 12."));
+    }
 }

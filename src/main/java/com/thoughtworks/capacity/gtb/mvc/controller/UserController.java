@@ -32,6 +32,7 @@ public class UserController {
             @Length(min = 3, max = 10, message = "Username length must >= 3 and <= 10.")
                     String username,
             @RequestParam
+            @Length(min = 5, max = 12, message = "Password length must >= 5 and <= 12.")
                     String password) {
         return userService.login(username, password);
     }
