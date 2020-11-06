@@ -20,11 +20,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(new CustomError(400, message));
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<CustomError> illegalArgumentHandler(IllegalArgumentException e) {
-        return ResponseEntity.badRequest().body(new CustomError(400, e.getMessage()));
-    }
-
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<CustomError> ConstraintViolationHandler(ConstraintViolationException e) {
         String message = "Validation error.";

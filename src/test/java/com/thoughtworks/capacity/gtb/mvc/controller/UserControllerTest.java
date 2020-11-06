@@ -137,8 +137,8 @@ class UserControllerTest {
         final String existingUsernameJson = objectMapper.writeValueAsString(existingUsernameUser);
 
         mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(existingUsernameJson))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value(400))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.code").value(409))
                 .andExpect(jsonPath("$.message").value("Username already exists."));
     }
 

@@ -1,6 +1,7 @@
 package com.thoughtworks.capacity.gtb.mvc.service;
 
 import com.thoughtworks.capacity.gtb.mvc.exception.PasswordNotCorrectException;
+import com.thoughtworks.capacity.gtb.mvc.exception.UserAlreadyExistsException;
 import com.thoughtworks.capacity.gtb.mvc.exception.UserNotExistsException;
 import com.thoughtworks.capacity.gtb.mvc.model.User;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class UserService {
 
     public void addUser(User user) {
         if (users.containsKey(user.getUsername())) {
-            throw new IllegalArgumentException("Username already exists.");
+            throw new UserAlreadyExistsException();
         }
         user.setId(nextId++);
         users.put(user.getUsername(), user);
